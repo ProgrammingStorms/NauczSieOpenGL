@@ -11,7 +11,7 @@ hero:
       link: /okno-programu
     - theme: alt
       text: "Zobacz kod na GitHub"
-      link: https://github.com
+      link: https://github.com/ProgrammingStorms/NauczSieOpenGL
 
 features:
   - title: "W 100% w języku Java"

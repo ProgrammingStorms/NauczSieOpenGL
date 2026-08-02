@@ -1,4 +1,4 @@
-## Okno programu - GLFW
+# Okno programu - GLFW
 
 GLFW to biblioteka która zastępuje przestarzałe i trudne w obsłudze
 okienkowe API javy czyli AWT oraz trochę nowsze Swing.
@@ -408,4 +408,103 @@ public class Window {
 }
 ```
 
+# Czyszczenie danych po oknie
 
+Jak już okno jest stworzone to można je wyczyścić po użyciu i wyłączyć GLFW.
+Użyjemy do tego metody `glfwDestroyWindow()` która usuwa obiekt okna z pamięci
+oraz metody `glfwTerminate()` która wyłącza do końca GLFW - odwrotność `glfwInit()`.
+
+Dodać też warto 2 metody czyli `cleanup()` dokonującą tego czyszczenia oraz `run()`
+która, scala inne metody w jedną. Przykład kodu poniżej:
+
+```java
+package com.nauczsieopengl;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL.*;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.glfw.GLFWVidMode;
+import java.nio.IntBuffer;
+
+public class Window {
+    public long window;
+    public int width = 800;
+    public int height = 600;
+    public String title = "NauczSieOpenGL";
+
+    public void init() {
+        if(!glfwInit()) {
+            throw new IllegalStateException("GLFW nie zostało inicjowane poprawnie!");
+        }
+
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+
+        window = glfwCreateWindow(width, height, title, 0L, 0L);
+
+        if(window == 0L) {
+            throw new RuntimeException("Okno jest równe null!");
+        }
+
+        try(MemoryStack stack = MemoryStack.stackPush()) {
+            IntBuffer widthB = stack.mallocInt(1);
+            IntBuffer heightB = stack.mallocInt(1);
+
+            GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+            glfwGetWindowSize(window, widthB, heightB);
+
+            glfwSetWindowPos(window, (vidMode.width() - widthB.get()) / 2, (vidMode.height() - heightB.get()) / 2);
+        }
+
+        glfwMakeContextCurrent(window);
+
+        createCapabilities();
+
+        glViewport(0, 0, width, height);
+
+        glfwSetFramebufferSizeCallback(window, (win, x, y) -> {
+            this.width = x;
+            this.height = y;
+            glViewport(0, 0, x, y);
+        });
+
+        glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
+            if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+                glfwSetWindowShouldClose(window, true);
+            }
+        });
+
+        glfwShowWindow(window);
+        glfwSwapInvertal(1);
+    }
+
+    public void cleanup() {
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
+
+    public void run() {
+        init();
+        cleanup();
+    }
+}
+```
+
+A to kod klasy głównej:
+
+```java
+package com.nauczsieopengl;
+
+public class Main {
+    public static void main(String[] args) {
+        Window window = new Window();
+        window.run();
+    }
+}
+```
