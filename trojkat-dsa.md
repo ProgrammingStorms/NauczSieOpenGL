@@ -1,1 +1,0 @@
-# Nowoczesny OpenGL #1
