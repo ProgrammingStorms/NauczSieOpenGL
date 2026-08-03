@@ -12,12 +12,3 @@ hero:
     - theme: alt
       text: "Zobacz kod na GitHub"
       link: https://github.com/ProgrammingStorms/NauczSieOpenGL
-
-features:
-  - title: "W 100% w języku Java"
-    details: "Zapomnij o skomplikowanym zarządzaniu pamięcią w C++. Piszemy czysty, strukturalny kod w Javie wykorzystując potęgę biblioteki LWJGL 3."
-  - title: "Zrozumiałe Podstawy"
-    details: "Uczysz się od zera na bazie klasycznej maszyny stanów z bindowaniem buforów, aby najpierw w pełni zrozumieć podstawy działania GPU."
-  - title: "Dla profesjonalnych IDE"
-    details: "Konfigurujemy projekty pod IntelliJ oraz Eclipse przy użyciu Mavena lub Gradle. Żadnych uproszczonych edytorów tekstowych."
----

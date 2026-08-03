@@ -1,9 +1,9 @@
 # Okno programu - GLFW
 
-GLFW to biblioteka która zastępuje przestarzałe i trudne w obsłudze
-okienkowe API javy czyli AWT oraz trochę nowsze Swing.
+**GLFW** to biblioteka która zastępuje przestarzałe i trudne w obsłudze
+okienkowe API Javy czyli *AWT* oraz trochę nowsze *Swing*.
 GLFW jest dostarczane w bibliotece LWJGL która zawiera też powiązania
-z OpenGL, OpenCL, OpenAL i innymi.
+z **OpenGL**, **OpenCL**, **OpenAL** i innymi.
 
 # Tworzenie klasy okna
 
@@ -28,8 +28,8 @@ public class Window {
 ```
 
 Potem warto dopisać do metody `init()` funkcje inicjalizującą
-o nazwie, `glfwInit()` ale dla bezpieczeństwa sprawdzić instrukcją if,
-czy napewno inicjalizacja przeszła poprawnie:
+o nazwie, `glfwInit()` ale dla bezpieczeństwa sprawdzić warunkiem,
+czy aby napewno inicjalizacja przeszła poprawnie:
 
 ```java
 package com.nauczsieopengl;
@@ -47,8 +47,8 @@ public class Window {
 }
 ```
 
-Jak już zainicjujesz glfw to trzeba dać mu wskazówki odnośnie okna i contextu OpenGL.
-Używa się do tego hintów czyli wskazówek a ich przykładowa implementacja wygląda tak:
+Jak już zainicjujesz *GLFW* to trzeba dać mu wskazówki odnośnie okna i kontekstu *OpenGL*.
+Używa się do tego hintów czyli wskazówek, a ich przykładowa implementacja wygląda tak:
 
 ```java
 package com.nauczsieopengl;
@@ -63,7 +63,7 @@ public class Window {
             throw new IllegalStateException("GLFW nie zostało inicjowane poprawnie!");
         }
 
-        //Okno nie będzie widoczne podczas jego przygotowania
+        //Okno nie będzie widoczne podczas jego przygotowywania
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
         //Okno będzie można rozszerzać na ekranie
@@ -88,7 +88,7 @@ funkcję `glfwCreateWindow()` gdzie, pierwszym i drugim argumentem są wymiary e
 Trzecim argumentem jest tytuł okna który będzie się wyświetlać w oknie.
 ostatnie 2 argumenty domyślnie ustawia się na 0. Ale 4 argumentem jest
 tryb pełnoekranowy - 1 to pełny ekran a 0 to okno.
-Po stworzeniu okna trzeba sprawdzić czy nie jest równe null.
+Po stworzeniu okna trzeba sprawdzić czy nie jest równe 0L czyli pusty wskaźnik do okna.
 Implementacja wygląda tak:
 
 ```java
@@ -125,7 +125,7 @@ public class Window {
 
 # Wyśrodkowanie okna
 
-Żeby wyśrodkować okno najlepiej użyć mechanizmu try-with-resources oraz funkcji z MemoryStack.
+Żeby wyśrodkować okno najlepiej użyć mechanizmu try-with-resources oraz funkcji z *MemoryStack*.
 Implementacja wygląda właśnie tak:
 
 ```java
@@ -157,7 +157,7 @@ public class Window {
         window = glfwCreateWindow(width, height, title, 0L, 0L);
 
         if(window == 0L) {
-            throw new RuntimeException("Okno jest równe null!");
+            throw new RuntimeException("Okno jest równe 0L!");
         }
 
         try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -180,9 +180,10 @@ public class Window {
 
 # Inicjalizacja kontekstu OpenGL
 
-Czas na najważniejszy moment tworzenia programu z użyciem OpenGL czyli inicjalizację
-kontekstu OpenGL - jest potrzebny do używania funkcji zaczynających się od gl... .
-Potrzeba najpierw włączyć kontekst w oknie za pomocą funkcji `glfwMakeContextCurrent()`
+Czas na najważniejszy moment tworzenia programu z użyciem **OpenGL** czyli inicjalizację
+kontekstu *OpenGL* - jest potrzebny do używania funkcji zaczynających się od gl... .
+Potrzeba najpierw połączyć okno z kontekstem *OpenGL* za pomocą funkcji `glfwMakeContextCurrent()`.
+
 z podaniem okna. Potem użyć funkcji `createCapabilities()` która faktycznie włącza ten
 kontekst OpenGL:
 
@@ -216,7 +217,7 @@ public class Window {
         window = glfwCreateWindow(width, height, title, 0L, 0L);
 
         if(window == 0L) {
-            throw new RuntimeException("Okno jest równe null!");
+            throw new RuntimeException("Okno jest równe 0L!");
         }
 
         try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -239,7 +240,8 @@ public class Window {
 
 # Callbacki i Viewport
 
-Callbacki to wyniki z klawiatury, myszki lub okna. 
+Callbacki to reakcje z klawiatury, myszki lub okna.
+Dotyczące interakcji użytkownika ze sprzętem lub systemem operacyjnym.
 Najlepiej na początku ustawić tylko 2: dotyczący
 zmiany rozmiaru ramki okna oraz klawiatury.
 Ten pierwszy uruchamia się gdy zmieni się rozmiar okna i ustawia
@@ -284,7 +286,7 @@ public class Window {
         window = glfwCreateWindow(width, height, title, 0L, 0L);
 
         if(window == 0L) {
-            throw new RuntimeException("Okno jest równe null!");
+            throw new RuntimeException("Okno jest równe 0L!");
         }
 
         try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -311,6 +313,7 @@ public class Window {
         });
 
         glfwSetKeyCallback(window, (win, key, scancode, action, mods) -> {
+            //Jeśli wyłącza ci 2 okna przy wyłączeniu to zmień na GLFW_RELEASE
             if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true);
             }
@@ -331,7 +334,7 @@ się z ciepła tworząc klatki których i tak nie zobaczysz.
 Bo jak np. masz monitor który odświeża swój obraz 60 razy na sekundę,
 to po co generować 500 FPS - to marnotrawstwo - zastanów się?
 
-Do tego żeby karta się nie męczyła służy funkcja `glfwSwapInvertal()` która,
+Do tego żeby karta się nie męczyła służy funkcja `glfwSwapInterval()` która,
 synchronizuje ilość FPS z odświeżaniem monitora.
 
 Implementacja tego wygląda tak:
@@ -368,7 +371,7 @@ public class Window {
         window = glfwCreateWindow(width, height, title, 0L, 0L);
 
         if(window == 0L) {
-            throw new RuntimeException("Okno jest równe null!");
+            throw new RuntimeException("Okno jest równe 0L!");
         }
 
         try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -402,8 +405,8 @@ public class Window {
 
         glfwShowWindow(window);
 
-        //liczba 1 to włączony a 0 to wyłączony - można też użyć true/false
-        glfwSwapInvertal(1);
+        //liczba 1 to włączony VSync a 0 to wyłączony
+        glfwSwapInterval(1);
     }
 }
 ```
@@ -448,7 +451,7 @@ public class Window {
         window = glfwCreateWindow(width, height, title, 0L, 0L);
 
         if(window == 0L) {
-            throw new RuntimeException("Okno jest równe null!");
+            throw new RuntimeException("Okno jest równe 0L!");
         }
 
         try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -481,7 +484,7 @@ public class Window {
         });
 
         glfwShowWindow(window);
-        glfwSwapInvertal(1);
+        glfwSwapInterval(1);
     }
 
     public void cleanup() {
@@ -508,3 +511,9 @@ public class Main {
     }
 }
 ```
+
+
+# Pętla renderowania
+
+Skoro mamy już okno to problemem jest to, że znika po sekundzie bezpowrotnie.
+Więc napiszemy pętle renderowania która utrzyma okno dopóki go nie wyłączysz.
